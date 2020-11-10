@@ -1,6 +1,6 @@
 import std.stdio;
 
-import std.algorithm : each, sort;
+import std.algorithm : each, maxElement, sort, reduce;
 import std.range;
 import std.array : array;
 import std.math : exp, pow;
@@ -48,11 +48,41 @@ void mutate(alias func)(ref Point p) {
 }
 
 void print(Point[] arr) {
+    // counter
+    static size_t iter;
+
+    auto fit = arr[].fit;
+
+    writefln!"N = %d\nX = [%(%2.5f, %)]\nY = [%(%2.5f, %)]\nFit = [%(%2.5f, %)]"(iter, arr[].x, arr[].y, fit); 
+    writefln!"Max = %2.5f, Average = %2.5f"(fit.maxElement, fit.reduce!"a + b" / N);
+    writeln;
+    ++iter;
+}
+
+@property double[] x(Point[] p) {
+    double[] result = new double[] (p.length);
+    foreach(i, elem; p)
+        result[i] = elem.x;
+    return result;
+}
+
+@property double[] y(Point[] p) {
+    double[] result = new double[] (p.length);
+    foreach(i, elem; p)
+        result[i] = elem.y;
+    return result;
+}
+
+@property double[] fit(Point[] p) {
+    double[] result = new double[] (p.length);
+    foreach(i, elem; p)
+        result[i] = elem.fit;
+    return result;
 }
 
 void main() {
-    // table header
-    writefln("|%10c|%15c|%15c|%6s|%6s|", 'N', 'X', 'Y', "Max", "Average");
+    writeln("f(x, y) = exp(-x^2 - y^2)");
+
     Point[] arr = new Point[] (N);
 
     // zero population generation
@@ -69,6 +99,8 @@ void main() {
     };
 
     for (ulong i = 0; i != 10; ++i) {
+        print(arr);
+
         auto pair = select2(arr);
 
         // crossover
