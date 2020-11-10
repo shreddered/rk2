@@ -1,12 +1,11 @@
 import std.stdio;
 
 import std.algorithm : each, maxElement, sort, reduce;
-import std.range;
 import std.array : array;
 import std.math : exp, pow;
 import std.random : uniform;
 import std.stdio : writefln;
-import std.typecons;
+import std.typecons : Tuple;
 
 alias fn = (x, y) => exp(-pow(x, 2) - pow(y, 2));
 
