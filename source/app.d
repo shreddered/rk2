@@ -1,10 +1,10 @@
-import std.stdio;
+module main;
 
 import std.algorithm : each, maxElement, sort, reduce;
 import std.array : array;
 import std.math : exp, pow;
 import std.random : uniform;
-import std.stdio : writefln;
+import std.stdio : writeln, writefln;
 import std.typecons : Tuple;
 
 alias fn = (x, y) => exp(-pow(x, 2) - pow(y, 2));
@@ -79,7 +79,7 @@ void print(Point[] arr) {
     return result;
 }
 
-void main() {
+int main() {
     writeln("f(x, y) = exp(-x^2 - y^2)");
 
     Point[] arr = new Point[] (N);
@@ -113,4 +113,5 @@ void main() {
         // NOTE: there's no leak because of GC in D
         arr = arr[0..N];
     }
+    return 0;
 }
