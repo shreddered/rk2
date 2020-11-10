@@ -1,16 +1,18 @@
 import std.stdio;
 
-import std.algorithm : each;
+import std.algorithm : each, sort;
 import std.range;
 import std.array : array;
 import std.math : exp, pow;
 import std.random : uniform;
+import std.stdio : writefln;
 import std.typecons;
 
 alias fn = (x, y) => exp(-pow(x, 2) - pow(y, 2));
 
 immutable ulong N = 6u;
 
+// helper alias for convenient point usage
 alias Point = Tuple!(double, "x", double, "y", double, "fit");
 
 void generatePoint(alias func)(ref Point p) {
@@ -19,11 +21,44 @@ void generatePoint(alias func)(ref Point p) {
     p.fit = func(p.x, p.y);
 }
 
+Point crossover(alias func)(Point p1, Point p2) {
+    Point res;
+    res.x = p1.x;
+    res.y = p2.y;
+    res.fit = func(res.x, res.y);
+    return res;
+}
+
+void mutate(alias func)(ref Point p) {
+    with(p) {
+        if (uniform!"[]"(0.0, 1.0) <= 0.25)
+            x += uniform!"()"(-1.0, 1.0);
+        if (uniform!"[]"(0.0, 1.0) <= 0.25)
+            y += uniform!"()"(-1.0, 1.0);
+        if (x > 2)
+            x = 2;
+        if (x < -2)
+            x = -2;
+        if (y > 2)
+            y = 2;
+        if (y < -2)
+            y = -2;
+        fit = func(x, y);
+    }
+}
+
+void print(Point[] arr) {
+}
+
 void main() {
+    // table header
+    writefln("|%10c|%15c|%15c|%6s|%6s|", 'N', 'X', 'Y', "Max", "Average");
     Point[] arr = new Point[] (N);
 
+    // zero population generation
     arr.each!(generatePoint!fn);
 
+    // helper function for selecting two random points
     alias select2 = (arr) {
         ulong i1, i2;
         while (i1 != i2) {
@@ -32,7 +67,19 @@ void main() {
         }
         return [arr[i1], arr[i2]];
     };
+
     for (ulong i = 0; i != 10; ++i) {
         auto pair = select2(arr);
+
+        // crossover
+        arr ~= crossover!fn(pair[0], pair[1]);
+
+        // mutation
+        arr.each!(mutate!fn);
+
+        // selection
+        sort!"a.fit > b.fit"(arr);
+        // NOTE: there's no leak because of GC in D
+        arr = arr[0..N];
     }
 }
