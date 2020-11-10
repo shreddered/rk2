@@ -98,7 +98,7 @@ void main() {
         return [arr[i1], arr[i2]];
     };
 
-    for (ulong i = 0; i != 10; ++i) {
+    foreach(_; 0..11) {
         print(arr);
 
         auto pair = select2(arr);
