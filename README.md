@@ -1,8 +1,7 @@
 # Рубежный контроль №2
 # Вариант 7
 
-[Function](function.jpg)
-
+![](function.jpg)
 
 Код программы находится в файле [source/app.d](source/app.d).
 
